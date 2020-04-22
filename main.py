@@ -19,37 +19,37 @@ import time
 
 
 class TicTacToeGame:
-    board_size = 0
+    rozmiar_planszy = 0
     def __init__(self):
-        self.initialize_game()
+        self.zacznij_gre()
 
-    def initialize_game(self):
+    def zacznij_gre(self):
         #TO DO dodac walidacje na wejscie
-        self.board_size = int(input('Insert Board size: '))
+        self.rozmiar_planszy = int(input('Podaj rozmiar planszy: '))
         self.current_state = []
-        for x in range(0, self.board_size):
+        for x in range(0, self.rozmiar_planszy):
             self.current_state.append([])
-            for y in range(0, self.board_size):
+            for y in range(0, self.rozmiar_planszy):
                 self.current_state[x].append('_')
 
 
         # TO DO dodac walidacje na wejscie
-        your_turn = input('Do you want to have the first move (y/n): ')
-        if your_turn == 'y':
-            self.player_turn = 'x'
-        elif your_turn == 'n':
-            self.player_turn = 'o'
+        kolej_gry = input('Czy chcesz wykonac pierwszy ruch (t/n): ')
+        if kolej_gry == 't':
+            self.kolejka_gracza = 'x'
+        elif kolej_gry == 'n':
+            self.kolejka_gracza = 'o'
 
-    def draw_board(self):
-        for i in range(0, self.board_size):
-            for j in range(0, self.board_size):
+    def rysuj_plansze(self):
+        for i in range(0, self.rozmiar_planszy):
+            for j in range(0, self.rozmiar_planszy):
                 print('{}|'.format(self.current_state[i][j]), end=" ")
             print()
         print()
 
-    def is_move_valid(self, xx, yy):
+    def mozliwy_ruch(self, xx, yy):
         # czy nie wychodzimy poza plansze
-        if xx < 0 or xx > self.board_size or yy < 0 or yy > self.board_size:
+        if xx < 0 or xx > self.rozmiar_planszy or yy < 0 or yy > self.rozmiar_planszy:
             return False
         # czy pole jest puste
         elif self.current_state[xx][yy] != '_':
@@ -57,51 +57,62 @@ class TicTacToeGame:
         else:
             return True
 
-    def is_game_finished(self):
+    def koniec_gry(self):
 
 
-        winning_configuation_o = 'o' * self.board_size
-        winning_configuation_x = 'x' * self.board_size
+        wygrana_o = 'o' * self.rozmiar_planszy
+        wygrana_x = 'x' * self.rozmiar_planszy
 
         # wygrana w  wierszu
-        for i in range (0, self.board_size):
-            this_row = ''
-            for j in range (0,self.board_size):
-                this_row +=(self.current_state[i][j])
-            if this_row == winning_configuation_x or this_row == winning_configuation_o:
+        for i in range (0, self.rozmiar_planszy):
+            rzad = ''
+            for j in range (0,self.rozmiar_planszy):
+                rzad +=(self.current_state[i][j])
+            if rzad == wygrana_x or rzad == wygrana_o:
                 return self.current_state[i][0]
 
         # wygrana w kolumnie
-        for i in range (0, self.board_size):
-            this_column = ''
-            for j in range (0,self.board_size):
-                this_column +=(self.current_state[j][i])
-            if this_column == winning_configuation_x or this_column == winning_configuation_o:
+        for i in range (0, self.rozmiar_planszy):
+            kolumna = ''
+            for j in range (0,self.rozmiar_planszy):
+                kolumna +=(self.current_state[j][i])3
+            if kolumna == wygrana_x or kolumna == wygrana_o:
                 return self.current_state[0][i]
 
         #TO DO wygrane na diagonali
+        for i in range(0, self.rozmiar_planszy):
+            przekatna=''
+            przekatna +=(self.current_state[i][i])
+        if przekatna == wygrana_x or przekatna == wygrana_o:
+            return self.current_state[0][0]
+
+        for i in range(0,self.rozmiar_planszy):
+            przekatna_rev=''
+            for j in range(self.rozmiar_planszy,0):
+                przekatna_rev +=(self.current_state[i][j])        
+        if przekatna_rev == wygrana_x or przekatna_rev == wygrana_o:
+            return self.current_state[i][j]
+                 
 
 
 
-
-
-        #czy plasnsza jest pelna
-        for i in range(0, self.board_size):
-            for j in range(0, self.board_size):
-                # There's an empty field, we continue the game
+        #czy plansza jest pelna
+        for i in range(0, self.rozmiar_planszy):
+            for j in range(0, self.rozmiar_planszy):
+                # Jest puste pole gra nadal trwa
                 if (self.current_state[i][j] == '_'):
                     return None
 
-        # It's a tie!
+        # Remis
         return '_'
 
 
     def max(self):
 
-        # Possible values for maxv are:
-        # -1 - loss
-        # 0  - a tie
-        # 1  - win
+        # Możliwe wartości maxv:
+        # -1 - przegrana
+        # 0  - remis
+        # 1  - wygrana
 
         # najgorszy przypadek
         maxv = -2
@@ -109,60 +120,56 @@ class TicTacToeGame:
         px = None
         py = None
 
-        result = self.is_game_finished()
+        wynik = self.koniec_gry()
 
-        # If the game came to an end, the function needs to return
-        # the evaluation function of the end. That can be:
-        # -1 - loss
-        # 0  - a tie
-        # 1  - win
-        if result == 'x':
+        
+        if wynik == 'x':
             return (-1, 0, 0)
-        elif result == 'o':
+        elif wynik == 'o':
             return (1, 0, 0)
-        elif result == '_':
+        elif wynik == '_':
             return (0, 0, 0)
 
-        for i in range(0, self.board_size):
-            for j in range(0, self.board_size):
+        for i in range(0, self.rozmiar_planszy):
+            for j in range(0, self.rozmiar_planszy):
                 if self.current_state[i][j] == '_':
-                    # On the empty field player 'O' makes a move and calls Min
-                    # That's one branch of the game tree.
+                    # Na pustym polu gracz 'o'wykonuje ruch wywolując Min
+                    # To jedna z gałęzi drzewa stanów
                     self.current_state[i][j] = 'o'
                     (m, min_i, min_j) = self.min()
-                    # Fixing the maxv value if needed
+                    # Poprawa wartości maxv
                     if m > maxv:
                         maxv = m
                         px = i
                         py = j
-                    # Setting back the field to empty
+                    # Pole znowu puste
                     self.current_state[i][j] = '_'
         return (maxv, px, py)
 
     def min(self):
 
-        # Possible values for minv are:
-        # -1 -
-        # 0  - a tie
-        # 1  -
+        # Możliwe wartości minv:
+        # -1 - przegrana
+        # 0  - remis
+        # 1  - wygrana
 
-        # najgorszy mozliwy przypadek
+        # najgorszy przypadek
         minv = 2
 
         qx = None
         qy = None
 
-        result = self.is_game_finished()
+        wynik = self.koniec_gry()
 
-        if result == 'x':
+        if wynik == 'x':
             return (-1, 0, 0)
-        elif result == 'o':
+        elif wynik == 'o':
             return (1, 0, 0)
-        elif result == '_':
+        elif wynik == '_':
             return (0, 0, 0)
 
-        for i in range(0, self.board_size):
-            for j in range(0, self.board_size):
+        for i in range(0, self.rozmiar_planszy):
+            for j in range(0, self.rozmiar_planszy):
                 if self.current_state[i][j] == '_':
                     self.current_state[i][j] = 'x'
                     (m, max_i, max_j) = self.max()
@@ -179,49 +186,49 @@ class TicTacToeGame:
 
     def play(self):
         while True:
-            self.draw_board()
-            self.result = self.is_game_finished()
+            self.rysuj_plansze()
+            self.wynik = self.koniec_gry()
 
             # komunikat ze gra sie skonczyla
-            if self.result != None:
-                if self.result == 'x':
+            if self.wynik != None:
+                if self.wynik == 'x':
                     print('The winner is X!')
-                elif self.result == 'o':
+                elif self.wynik == 'o':
                     print('The winner is O!')
-                elif self.result == '_':
+                elif self.wynik == '_':
                     print("It's a tie!")
 
-                self.initialize_game()
+                self.zacznij_gre()
                 return
 
             # ruch gracza
-            if self.player_turn == 'x':
+            if self.kolejka_gracza == 'x':
 
                 while True:
 
                     start = time.time()
                     (m, qx, qy) = self.min()
                     end = time.time()
-                    print('Evaluation time: {}s'.format(round(end - start, 7)))
-                    print('Recommended move: X = {}, Y = {}'.format(qx, qy))
+                    print('Czas oceny stanu: {}s'.format(round(end - start, 7)))
+                    print('Zalecany ruch: X = {}, Y = {}'.format(qx, qy))
 
-                    px = int(input('Insert the X coordinate: '))
-                    py = int(input('Insert the Y coordinate: '))
+                    px = int(input('Wprowadź współrzędną X: '))
+                    py = int(input('Wprowadź współrzędną Y: '))
 
                     (qx, qy) = (px, py)
 
-                    if self.is_move_valid(px, py):
+                    if self.mozliwy_ruch(px, py):
                         self.current_state[px][py] = 'x'
-                        self.player_turn = 'o'
+                        self.kolejka_gracza = 'o'
                         break
                     else:
-                        print('The move is not valid! Try again.')
+                        print('Niemożliwy ruch! Spróbuj ponownie.')
 
             # ruch komuptera
             else:
                 (m, px, py) = self.max()
                 self.current_state[px][py] = 'o'
-                self.player_turn = 'x'
+                self.kolejka_gracza = 'x'
 
 
 
