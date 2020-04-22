@@ -103,7 +103,7 @@ class TicTacToeGame:
         # 0  - a tie
         # 1  - win
 
-        # We're initially setting it to -2 as worse than the worst case:
+        # najgorszy przypadek
         maxv = -2
 
         px = None
@@ -142,11 +142,11 @@ class TicTacToeGame:
     def min(self):
 
         # Possible values for minv are:
-        # -1 - win
+        # -1 -
         # 0  - a tie
-        # 1  - loss
+        # 1  -
 
-        # We're initially setting it to 2 as worse than the worst case:
+        # najgorszy mozliwy przypadek
         minv = 2
 
         qx = None
@@ -182,7 +182,7 @@ class TicTacToeGame:
             self.draw_board()
             self.result = self.is_game_finished()
 
-            # Printing the appropriate message if the game has ended
+            # komunikat ze gra sie skonczyla
             if self.result != None:
                 if self.result == 'x':
                     print('The winner is X!')
@@ -194,7 +194,7 @@ class TicTacToeGame:
                 self.initialize_game()
                 return
 
-            # If it's player's turn
+            # ruch gracza
             if self.player_turn == 'x':
 
                 while True:
@@ -217,64 +217,13 @@ class TicTacToeGame:
                     else:
                         print('The move is not valid! Try again.')
 
-            # If it's AI's turn
+            # ruch komuptera
             else:
                 (m, px, py) = self.max()
                 self.current_state[px][py] = 'o'
                 self.player_turn = 'x'
 
 
-        # winning_configuation = 'x' * self.board_size
-        # print(winning_configuation)
-        #
-        # self.is_game_finished()
-        # self.current_state[0][2]='x'
-        # self.current_state[1][2] = 'x'
-        # self.current_state[2][2] = 'x'
-        # self.current_state[3][2] = 'x'
-        # self.current_state[4][2] = 'x'
-        # # self.current_state[3][0] = 'o'
-        # # self.current_state[3][1] = 'o'
-        # # self.current_state[3][2] = 'o'
-        # # self.current_state[3][3] = 'o'
-        # # self.current_state[3][4] = 'o'
-        # # self.current_state[3][5] = 'o'
-        #
-        #
-        #
-        #
-        # self.draw_board()
-        #
-        # print(self.is_game_finished())
-        # self.draw_board()
-        #
-        # px = int(input('Insert the X coordinate: '))
-        # py = int(input('Insert the Y coordinate: '))
-        #
-        # (gx, gy) = (px, py)
-        #
-        # if self.is_move_valid(px, py):
-        #     self.current_state[px][py] = 'x'
-        #     self.player_turn = 'o'
-        #     #break
-        # else:
-        #     print ('The move is not valid')
-        #
-        # self.draw_board()
-        #
-        # px = int(input('Insert the X coordinate: '))
-        # py = int(input('Insert the Y coordinate: '))
-        #
-        # (gx, gy) = (px, py)
-        #
-        # if self.is_move_valid(px, py):
-        #     self.current_state[px][py] = 'x'
-        #     self.player_turn = 'o'
-        #     # break
-        # else:
-        #     print('The move is not valid')
-        #
-        # self.draw_board()
 
 g = TicTacToeGame()
 g.play()
