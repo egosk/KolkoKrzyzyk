@@ -1,6 +1,7 @@
 import time
 
-# do poprawki:gdzies jest dziura w logice
+# do poprawki:
+# gdzies jest dziura w logice
 # po w sytuacji
 # o . .
 # . x .
@@ -8,9 +9,14 @@ import time
 # komputer zamiast postawic brakujace o i wygrac
 # stawia o w srodkowej kolumnie by nie pozwolic graczowi wygrac w kolejnym ruchu
 
+# dodatkowo na razie dziala poprawnie tylko jesli zaczyna gracz
+# trzeba wprowadzic 'y' gdy komputer pyta czy chcesz zaczac
+# czyli kolejna rzecz do poprawki to obsluga tego kto zaczyna gre
+
 #TO DO
 # dodac walidacje na wejsciach
 # dodac wygrana na diagonali
+
 
 class TicTacToeGame:
     board_size = 0
