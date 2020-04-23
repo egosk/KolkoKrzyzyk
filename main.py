@@ -10,6 +10,7 @@ import time
 # o x x
 # komputer zamiast postawic brakujace o i wygrac
 # stawia o w srodkowej kolumnie by nie pozwolic graczowi wygrac w kolejnym ruchu
+# -- > wydaje mi sie ze juz poprawilam ale jeszcze potestowac trzeba
 
 # 2. dodac walidacje na wejsciach
 # plansza musi byc n>=3
@@ -25,11 +26,11 @@ class TicTacToeGame:
     def zacznij_gre(self):
         #TO DO dodac walidacje na wejscie
         self.rozmiar_planszy = int(input('Podaj rozmiar planszy: '))
-        self.current_state = []
+        self.stan_planszy = []
         for x in range(0, self.rozmiar_planszy):
-            self.current_state.append([])
+            self.stan_planszy.append([])
             for y in range(0, self.rozmiar_planszy):
-                self.current_state[x].append('_')
+                self.stan_planszy[x].append('_')
 
 
         # TO DO dodac walidacje na wejscie
@@ -43,7 +44,7 @@ class TicTacToeGame:
     def rysuj_plansze(self):
         for i in range(0, self.rozmiar_planszy):
             for j in range(0, self.rozmiar_planszy):
-                print('{}|'.format(self.current_state[i][j]), end=" ")
+                print('{}|'.format(self.stan_planszy[i][j]), end=" ")
             print()
         print()
 
@@ -53,7 +54,7 @@ class TicTacToeGame:
         if xx < 0 or xx > self.rozmiar_planszy or yy < 0 or yy > self.rozmiar_planszy:
             return False
         # czy pole jest puste
-        elif self.current_state[xx][yy] != '_':
+        elif self.stan_planszy[xx][yy] != '_':
             return False
         else:
             return True
@@ -67,44 +68,44 @@ class TicTacToeGame:
         for i in range (0, self.rozmiar_planszy):
             rzad = ''
             for j in range (0,self.rozmiar_planszy):
-                rzad +=(self.current_state[i][j])
+                rzad +=(self.stan_planszy[i][j])
             if rzad == wygrana_x or rzad == wygrana_o:
-                return self.current_state[i][0]
+                return self.stan_planszy[i][0]
 
         # wygrana w kolumnie
         for i in range (0, self.rozmiar_planszy):
             kolumna = ''
             for j in range (0,self.rozmiar_planszy):
-                kolumna +=(self.current_state[j][i])
+                kolumna +=(self.stan_planszy[j][i])
             if kolumna == wygrana_x or kolumna == wygrana_o:
-                return self.current_state[0][i]
+                return self.stan_planszy[0][i]
 
         # wygrane na diagonali
         przekatna = ''
         for i in range(0, self.rozmiar_planszy):
-            przekatna +=(self.current_state[i][i])
+            przekatna +=(self.stan_planszy[i][i])
             if przekatna == wygrana_x or przekatna == wygrana_o:
-                return self.current_state[0][0]
+                return self.stan_planszy[0][0]
 
         przekatna_rev = ''
         for i in range(0, self.rozmiar_planszy):
-            przekatna_rev += self.current_state[i][self.rozmiar_planszy-1-i]
+            przekatna_rev += self.stan_planszy[i][self.rozmiar_planszy - 1 - i]
             if przekatna_rev == wygrana_x or przekatna_rev == wygrana_o:
-                return self.current_state[0][self.rozmiar_planszy-1]
+                return self.stan_planszy[0][self.rozmiar_planszy - 1]
 
 
         #czy plansza jest pelna
         for i in range(0, self.rozmiar_planszy):
             for j in range(0, self.rozmiar_planszy):
                 # Jest puste pole gra nadal trwa
-                if (self.current_state[i][j] == '_'):
+                if (self.stan_planszy[i][j] == '_'):
                     return None
 
         # Remis
         return '_'
 
 
-    def max(self):
+    def max(self, alpha, beta):
 
         # Możliwe wartości maxv:
         # -1 - przegrana
@@ -129,21 +130,28 @@ class TicTacToeGame:
 
         for i in range(0, self.rozmiar_planszy):
             for j in range(0, self.rozmiar_planszy):
-                if self.current_state[i][j] == '_':
+                if self.stan_planszy[i][j] == '_':
                     # Na pustym polu gracz 'o'wykonuje ruch wywolując Min
                     # To jedna z gałęzi drzewa stanów
-                    self.current_state[i][j] = 'o'
-                    (m, min_i, min_j) = self.min()
+                    self.stan_planszy[i][j] = 'o'
+
+                    (m, min_i, min_j) = self.min(alpha, beta)
                     # Poprawa wartości maxv
                     if m > maxv:
                         maxv = m
                         px = i
                         py = j
                     # Pole znowu puste
-                    self.current_state[i][j] = '_'
+                    self.stan_planszy[i][j] = '_'
+
+                    if maxv >= beta:
+                        return (maxv, px, py)
+
+                    if maxv > alpha:
+                        alpha = maxv
         return (maxv, px, py)
 
-    def min(self):
+    def min(self, alpha, beta):
 
         # Możliwe wartości minv:
         # -1 - przegrana
@@ -167,14 +175,20 @@ class TicTacToeGame:
 
         for i in range(0, self.rozmiar_planszy):
             for j in range(0, self.rozmiar_planszy):
-                if self.current_state[i][j] == '_':
-                    self.current_state[i][j] = 'x'
-                    (m, max_i, max_j) = self.max()
+                if self.stan_planszy[i][j] == '_':
+                    self.stan_planszy[i][j] = 'x'
+                    (m, max_i, max_j) = self.max(alpha, beta)
                     if m < minv:
                         minv = m
                         qx = i
                         qy = j
-                    self.current_state[i][j] = '_'
+                    self.stan_planszy[i][j] = '_'
+
+                    if minv <= alpha:
+                        return (minv, qx, qy)
+
+                    if minv < beta:
+                        beta = minv
 
         return (minv, qx, qy)
 
@@ -201,11 +215,9 @@ class TicTacToeGame:
 
             # ruch gracza
             if self.kolejka_gracza == 'x':
-
                 while True:
-
                     start = time.time()
-                    (m, qx, qy) = self.min()
+                    (m, qx, qy) = self.min(-2,2)
                     end = time.time()
                     print('Czas oceny stanu: {}s'.format(round(end - start, 7)))
                     print('Zalecany ruch: X = {}, Y = {}'.format(qx, qy))
@@ -216,7 +228,7 @@ class TicTacToeGame:
                     (qx, qy) = (px, py)
 
                     if self.mozliwy_ruch(px, py):
-                        self.current_state[px][py] = 'x'
+                        self.stan_planszy[px][py] = 'x'
                         self.kolejka_gracza = 'o'
                         break
                     else:
@@ -224,8 +236,9 @@ class TicTacToeGame:
 
             # ruch komuptera
             else:
-                (m, px, py) = self.max()
-                self.current_state[px][py] = 'o'
+
+                (m, px, py) = self.max(-2,2)
+                self.stan_planszy[px][py] = 'o'
                 self.kolejka_gracza = 'x'
 
 
