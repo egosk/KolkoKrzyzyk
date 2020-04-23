@@ -1,6 +1,8 @@
 import time
 
-# do poprawki:
+
+#TO DO :
+# 1. poprawka logiki:
 # gdzies jest dziura w logice
 # po w sytuacji
 # o . .
@@ -9,13 +11,9 @@ import time
 # komputer zamiast postawic brakujace o i wygrac
 # stawia o w srodkowej kolumnie by nie pozwolic graczowi wygrac w kolejnym ruchu
 
-# dodatkowo na razie dziala poprawnie tylko jesli zaczyna gracz
-# trzeba wprowadzic 'y' gdy komputer pyta czy chcesz zaczac
-# czyli kolejna rzecz do poprawki to obsluga tego kto zaczyna gre
+# 2. dodac walidacje na wejsciach
+# plansza musi byc n>=3
 
-#TO DO
-# dodac walidacje na wejsciach
-# dodac wygrana na diagonali
 
 
 class TicTacToeGame:
@@ -23,6 +21,7 @@ class TicTacToeGame:
     def __init__(self):
         self.zacznij_gre()
 
+    # pobiera wielkosc planszy i kto zaczyna
     def zacznij_gre(self):
         #TO DO dodac walidacje na wejscie
         self.rozmiar_planszy = int(input('Podaj rozmiar planszy: '))
@@ -40,6 +39,7 @@ class TicTacToeGame:
         elif kolej_gry == 'n':
             self.kolejka_gracza = 'o'
 
+    #rysuje pusta plansze n x n
     def rysuj_plansze(self):
         for i in range(0, self.rozmiar_planszy):
             for j in range(0, self.rozmiar_planszy):
@@ -47,6 +47,7 @@ class TicTacToeGame:
             print()
         print()
 
+    # sprawdza czy ruch jest dozwolony
     def mozliwy_ruch(self, xx, yy):
         # czy nie wychodzimy poza plansze
         if xx < 0 or xx > self.rozmiar_planszy or yy < 0 or yy > self.rozmiar_planszy:
@@ -57,9 +58,8 @@ class TicTacToeGame:
         else:
             return True
 
+    #sprawdza warunki zakonczenia gry
     def koniec_gry(self):
-
-
         wygrana_o = 'o' * self.rozmiar_planszy
         wygrana_x = 'x' * self.rozmiar_planszy
 
@@ -182,6 +182,7 @@ class TicTacToeGame:
 
 
     def play(self):
+
         while True:
             self.rysuj_plansze()
             self.wynik = self.koniec_gry()
@@ -189,13 +190,13 @@ class TicTacToeGame:
             # komunikat ze gra sie skonczyla
             if self.wynik != None:
                 if self.wynik == 'x':
-                    print('The winner is X!')
+                    print('Wygrywa x! Gratulacje!')
                 elif self.wynik == 'o':
-                    print('The winner is O!')
+                    print('Wygrywa o! Powodzenia nastepnym razem.')
                 elif self.wynik == '_':
-                    print("It's a tie!")
+                    print("Remis!")
 
-                self.zacznij_gre()
+                # self.zacznij_gre()
                 return
 
             # ruch gracza
@@ -219,7 +220,7 @@ class TicTacToeGame:
                         self.kolejka_gracza = 'o'
                         break
                     else:
-                        print('Niemożliwy ruch! Spróbuj ponownie.')
+                        print('Niedozwolony ruch! Spróbuj ponownie.')
 
             # ruch komuptera
             else:
