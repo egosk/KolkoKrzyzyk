@@ -75,25 +75,22 @@ class TicTacToeGame:
         for i in range (0, self.rozmiar_planszy):
             kolumna = ''
             for j in range (0,self.rozmiar_planszy):
-                kolumna +=(self.current_state[j][i])3
+                kolumna +=(self.current_state[j][i])
             if kolumna == wygrana_x or kolumna == wygrana_o:
                 return self.current_state[0][i]
 
-        #TO DO wygrane na diagonali
+        # wygrane na diagonali
+        przekatna = ''
         for i in range(0, self.rozmiar_planszy):
-            przekatna=''
             przekatna +=(self.current_state[i][i])
-        if przekatna == wygrana_x or przekatna == wygrana_o:
-            return self.current_state[0][0]
+            if przekatna == wygrana_x or przekatna == wygrana_o:
+                return self.current_state[0][0]
 
-        for i in range(0,self.rozmiar_planszy):
-            przekatna_rev=''
-            for j in range(self.rozmiar_planszy,0):
-                przekatna_rev +=(self.current_state[i][j])        
-        if przekatna_rev == wygrana_x or przekatna_rev == wygrana_o:
-            return self.current_state[i][j]
-                 
-
+        przekatna_rev = ''
+        for i in range(0, self.rozmiar_planszy):
+            przekatna_rev += self.current_state[i][self.rozmiar_planszy-1-i]
+            if przekatna_rev == wygrana_x or przekatna_rev == wygrana_o:
+                return self.current_state[0][self.rozmiar_planszy-1]
 
 
         #czy plansza jest pelna
@@ -234,5 +231,7 @@ class TicTacToeGame:
 
 g = TicTacToeGame()
 g.play()
+
+
 
 
