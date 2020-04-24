@@ -1,22 +1,6 @@
 import time
 
 
-#TO DO :
-# 1. poprawka logiki:
-# gdzies jest dziura w logice
-# po w sytuacji
-# o . .
-# . x .
-# o x x
-# komputer zamiast postawic brakujace o i wygrac
-# stawia o w srodkowej kolumnie by nie pozwolic graczowi wygrac w kolejnym ruchu
-# -- > wydaje mi sie ze juz poprawilam ale jeszcze potestowac trzeba
-
-# 2. dodac walidacje na wejsciach
-# plansza musi byc n>=3
-
-
-
 class TicTacToeGame:
     rozmiar_planszy = 0
     def __init__(self):
@@ -24,17 +8,35 @@ class TicTacToeGame:
 
     # pobiera wielkosc planszy i kto zaczyna
     def zacznij_gre(self):
-        #TO DO dodac walidacje na wejscie
-        self.rozmiar_planszy = int(input('Podaj rozmiar planszy: '))
+        #walidacje na wejscie - wielkosc planszy
+        while (True):
+            wejscie = (input('Podaj rozmiar planszy: '))
+
+            try:
+                self.rozmiar_planszy = int(wejscie)
+                if self.rozmiar_planszy < 3:
+                    print("Plansza za mala. Minimalny rozmiar: 3")
+                else:
+                    break
+            except ValueError:
+                print("Niepoprawna wartosc. Wprowadz liczbe >= 3")
         self.stan_planszy = []
         for x in range(0, self.rozmiar_planszy):
             self.stan_planszy.append([])
             for y in range(0, self.rozmiar_planszy):
                 self.stan_planszy[x].append('_')
 
-
-        # TO DO dodac walidacje na wejscie
-        kolej_gry = input('Czy chcesz wykonac pierwszy ruch (t/n): ')
+            # walidacje na - kto zaczyna
+        while (True):
+            wejscie_tn = input('Czy chcesz wykonac pierwszy ruch (t/n): ')
+            try:
+                kolej_gry = str(wejscie_tn)
+                if kolej_gry == 't' or kolej_gry == 'n':
+                    break
+                else:
+                    print("Niepoprawna wartosc")
+            except ValueError:
+                print("Niepoprawna wartosc")
         if kolej_gry == 't':
             self.kolejka_gracza = 'x'
         elif kolej_gry == 'n':
@@ -222,8 +224,17 @@ class TicTacToeGame:
                     print('Czas oceny stanu: {}s'.format(round(end - start, 7)))
                     print('Zalecany ruch: X = {}, Y = {}'.format(qx, qy))
 
-                    px = int(input('Wprowadź współrzędną X: '))
-                    py = int(input('Wprowadź współrzędną Y: '))
+                    # walidacja: wjescia
+                    while (True):
+                        pxx = (input('Wprowadź współrzędną X: '))
+                        pyy = (input('Wprowadź współrzędną Y: '))
+
+                        try:
+                            px = int(pxx)
+                            py = int(pyy)
+                            break
+                        except ValueError:
+                            print("Niepoprawna wartosc.")
 
                     (qx, qy) = (px, py)
 
