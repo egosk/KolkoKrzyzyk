@@ -4,13 +4,10 @@ from kolkokrzyzyk import TicTacToeGame
 
 class KolkoKrzyzykTest(unittest.TestCase):
 
-    def test_zacznij_gre(self):
-        self.rozmiar_planszy=3
-        oczekiwana_plansza=[['_','_','_'], ['_','_','_'],['_','_','_']]
-        TicTacToeGame.zacznij_gre(self)
-        self.assertEqual(oczekiwana_plansza, self.stan_planszy)
+    
 
     def test_stan_planszy(self):
+        self.rozmiar_planszy=3
         oczekiwany_stan=['x','x','x']
         sprawdz_plansze=''
         for i in range (0, self.rozmiar_planszy):
